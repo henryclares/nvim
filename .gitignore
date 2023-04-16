@@ -1,0 +1,7 @@
+tt.*
+plugin/
+*packer_compiled.lua
+
+foo.*
+*.log
+data
