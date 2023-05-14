@@ -1,3 +1,4 @@
+local ui = require("nvim.plugins.lsp.ui")
 -- import lspconfig plugin safely
 local lspconfig_status, lspconfig = pcall(require, "lspconfig")
 if not lspconfig_status then
@@ -64,6 +65,12 @@ end
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = false
 
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+-- 	underline = true,
+-- 	update_in_insert = false,
+-- 	virtual_text = { spacing = 4, prefix = "●" },
+-- 	severity_sort = true,
+-- })
 -- Change the Diagnostic symbols in the sign column (gutter)
 -- (not in youtube nvim video)
 local signs = { Error = " ", Warn = " ", Hint = "ﴞ ", Info = " " }
@@ -78,17 +85,22 @@ vim.cmd([[
         sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
         sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
     ]])
+--
+ui.setup()
 
-vim.diagnostic.config({
-	virtual_text = {
-		-- source = "always",  -- Or "if_many"
-		prefix = "●", -- Could be '■', '▎', 'x'
-	},
-	signs = true,
-	underline = true,
-	update_in_insert = true,
-	severity_sort = true,
-})
+-- vim.diagnostic.config({
+-- 	virtual_text = {
+-- 		-- source = "always",  -- Or "if_many"
+-- 		prefix = "●", -- Could be '■', '▎', 'x'
+-- 	},
+-- 	signs = true,
+-- 	underline = true,
+-- 	update_in_insert = true,
+-- 	severity_sort = true,
+-- 	-- float = {
+-- 	-- 	source = "always",
+-- 	-- },
+-- })
 -- configure html server
 lspconfig["html"].setup({
 	capabilities = capabilities,
@@ -138,7 +150,8 @@ lspconfig["emmet_ls"].setup({
 lspconfig["lua_ls"].setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
-	settings = { -- custom settings for lua
+	settings = {
+		-- custom settings for lua
 		Lua = {
 			-- make the language server recognize "vim" global
 			diagnostics = {

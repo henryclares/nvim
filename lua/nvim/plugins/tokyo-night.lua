@@ -1,13 +1,11 @@
 local cmd = vim.cmd
 
-cmd([[colorscheme tokyonight-storm]])
-
 require("tokyonight").setup({
 	-- your configuration comes here
 	-- or leave it empty to use the default settings
-	style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+	style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
 	light_style = "day", -- The theme is used when the background is set to light
-	transparent = true, -- Enable this to disable setting the background color
+	transparent = false, -- Enable this to disable setting the background color
 	terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
 	styles = {
 		-- Style to be applied to different syntax groups
@@ -17,8 +15,8 @@ require("tokyonight").setup({
 		functions = {},
 		variables = {},
 		-- Background styles. Can be "dark", "transparent" or "normal"
-		sidebars = "dark", -- style for sidebars, see below
-		floats = "dark", -- style for floating windows
+		sidebars = "transparent", -- style for sidebars, see below
+		floats = "transparent", -- style for floating windows
 	},
 	sidebars = {
 		"qf",
@@ -35,14 +33,16 @@ require("tokyonight").setup({
 	--- You can override specific color groups to use other groups or a hex color
 	--- function will be called with a ColorScheme table
 	---@param colors ColorScheme
-	on_colors = function(colors) end,
+	on_colors = function(_)
+		-- colors.fg_gutter = "#b2b8cf"
+	end,
 	--- You can override specific highlights to use other groups or a hex color
 	--- function will be called with a Highlights and ColorScheme table
 	---@param highlights Highlights
 	---@param colors ColorScheme
 	on_highlights = function(hl, c)
-		-- hl.CursorLineNr = { fg = c.orange, bold = true }
-		-- hl.LineNr = { fg = c.orange, bold = true }
+		hl.CursorLineNr = { fg = c.yelow, bold = true }
+		-- hl.LineNr = { fg = c.yelow, bold = true }
 		-- hl.LineNrAbove = { fg = c.fg_gutter }
 		-- hl.LineNrBelow = { fg = c.fg_gutter }
 		-- local prompt = "#2d3149"
@@ -55,4 +55,6 @@ require("tokyonight").setup({
 		-- hl.TelescopeResultsTitle = { bg = c.bg_dark, fg = c.bg_dark }
 	end,
 })
--- require("tokyonight").colorscheme()
+
+-- -- require("tokyonight").colorscheme()
+cmd([[colorscheme tokyonight-night]])

@@ -1,15 +1,25 @@
-vim.notify = require("notify")
+local notify = require("notify")
 
-require("notify").setup({
-	timeout = 3000,
-	max_height = function()
-		return math.floor(vim.o.lines * 0.75)
-	end,
-	max_width = function()
-		return math.floor(vim.o.columns * 0.75)
-	end,
-	stages = "slide",
-})
+local banned_messages = { "No information available" }
+
+-- notify.setup({
+-- 	timeout = 2000,
+-- 	on_open = function(win)
+-- 		vim.api.nvim_win_set_config(win, { zindex = 2000 })
+-- 	end,
+-- })
+
+---@diagnostic disable-next-line: duplicate-set-field
+vim.notify = function(msg, ...)
+	for _, banned in ipairs(banned_messages) do
+		if msg == banned then
+			return
+		end
+	end
+	return require("notify")(msg, ...)
+end
+
+-- vim.notify = notify
 
 -- vim.notify.config({
 -- 	position = "bottom_right",

@@ -52,7 +52,7 @@ return packer.startup(function(use)
 	use("nvim-lua/plenary.nvim") -- lua functions that many plugins use
 	use("folke/tokyonight.nvim") -- tokyonight theme
 
-	use({ "catppuccin/nvim", as = "catppuccin" }) -- catpuccin
+	-- use({ "catppuccin/nvim", as = "catppuccin" }) -- catpuccin
 
 	-- use("bluz71/vim-nightfly-guicolors") -- preferred colorscheme
 
@@ -62,12 +62,14 @@ return packer.startup(function(use)
 
 	-- essential plugins
 	--  surround
-	use({
-		"echasnovski/mini.surround",
-		branch = "stable",
-	})
-	-- use("tpope/vim-surround") -- add, delete, change surroundings (it's awesome)
-	-- use("inkarkat/vim-ReplaceWithRegister") -- replace with register contents using motion (gr + motion)
+	-- use({
+	-- 	"echasnovski/mini.surround",
+	-- 	branch = "stable",
+	-- 	config = function()
+	-- 		require("echasnovski/mini.surround").setup()
+	-- 	end,
+	-- })
+	use("tpope/vim-surround") -- add, delete, change surroundings
 
 	-- commenting with gc
 	use("numToStr/Comment.nvim")
@@ -79,11 +81,11 @@ return packer.startup(function(use)
 	use("nvim-tree/nvim-web-devicons")
 
 	-- statusline
-	-- use("hoob3rt/lualine.nvim")
-	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "nvim-tree/nvim-web-devicons", opt = true },
-	})
+	use("hoob3rt/lualine.nvim")
+	-- use({
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	requires = { "nvim-tree/nvim-web-devicons", opt = true },
+	-- })
 
 	-- fuzzy finding w/ telescope
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- dependency for better sorting performance
@@ -97,8 +99,25 @@ return packer.startup(function(use)
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"saadparwaiz1/cmp_luasnip",
+			-- "neovim/nvim-lspconfig",
+			"hrsh7th/cmp-cmdline",
+		},
+		require = {
+			"L3MON4D3/LuaSnip", -- follow latest release.
 		},
 	}) -- completion plugin
+
+	use("saadparwaiz1/cmp_luasnip")
+	-- snippets
+	use({
+		"L3MON4D3/LuaSnip", -- follow latest release.
+		-- after = "nvim-cmp",
+		confing = function()
+			require("nvim.plugins.luasnip")
+		end,
+	}) -- snippet engine
+
+	use("rafamadriz/friendly-snippets") -- useful snippets
 
 	-- references
 	use({ "RRethy/vim-illuminate" })
@@ -107,10 +126,6 @@ return packer.startup(function(use)
 	use("hrsh7th/cmp-path") -- source for file system paths
 	use("hrsh7th/cmp-nvim-lsp") -- for autocompletion
 	-- use("saadparwaiz1/cmp_luasnip") -- for autocompletion
-
-	-- snippets
-	use("L3MON4D3/LuaSnip") -- snippet engine
-	use("rafamadriz/friendly-snippets") -- useful snippets
 
 	-- managing & installing lsp servers, linters & formatters
 	use("williamboman/mason.nvim") -- in charge of managing lsp servers, linters & formatters
@@ -151,16 +166,16 @@ return packer.startup(function(use)
 	})
 
 	-- auto pairs
-	use({
-		"echasnovski/mini.pairs",
-		branch = "stable",
-		config = function(_, opts)
-			require("mini.pairs").setup(opts)
-		end,
-	})
+	-- use({
+	-- 	"echasnovski/mini.pairs",
+	-- 	branch = "stable",
+	-- 	config = function(_, opts)
+	-- 		require("mini.pairs").setup(opts)
+	-- 	end,
+	-- })
 	-- autoclose tags
 	-- auto closing
-	-- use("windwp/nvim-autopairs") -- autoclose parens, brackets, quotes, etc...
+	use("windwp/nvim-autopairs") -- autoclose parens, brackets, quotes, etc...
 	use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" }) -- autoclose tags
 
 	-- git integration
@@ -274,6 +289,17 @@ return packer.startup(function(use)
 	use({
 		"SmiteshP/nvim-navic",
 		requires = "neovim/nvim-lspconfig",
+	})
+	-- lsp color for underline
+	use("folke/lsp-colors.nvim")
+	-- folding
+	use({ "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" })
+
+	use({
+		"iamcco/markdown-preview.nvim",
+		run = function()
+			vim.fn["mkdp#util#install"]()
+		end,
 	})
 
 	if packer_bootstrap then

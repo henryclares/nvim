@@ -1,5 +1,7 @@
 --  -- set leader key to space
 local keymap = vim.keymap.set -- for conciseness
+local fn = vim.fn
+local as = { debug = { layout = { ft = { dart = 2 } } } }
 
 --  buffer read/write
 keymap("n", ",q", ":q<CR>")
@@ -26,6 +28,17 @@ keymap("n", "<C-h>", "<C-w>h")
 keymap("n", "<C-k>", "<C-w>k")
 keymap("n", "<C-j>", "<C-w>j")
 keymap("n", "<C-l>", "<C-w>l")
+
+-- move line
+-- Mover líneas hacia abajo y reindentarlas
+keymap("n", ";j", ":m .+1<CR>==", { noremap = true })
+keymap("i", ";j", "<Esc>:m .+1<CR>==gi", { noremap = true })
+keymap("v", ";j", ":m '>+1<CR>gv=gv", { noremap = true })
+
+-- Mover líneas hacia arriba y reindentarlas
+keymap("n", ";k", ":m .-2<CR>==", { noremap = true })
+keymap("i", ";k", "<Esc>:m .-2<CR>==gi", { noremap = true })
+keymap("v", ";k", ":m '<-2<CR>gv=gv", { noremap = true })
 
 -- nvim tree
 keymap("n", "<C-n>", "<cmd> NvimTreeToggle <CR>")
@@ -172,7 +185,12 @@ keymap("n", "<leader>yv", ":Telescope flutter fvm<CR>")
 
 -- LUA SNIPPETS
 -- be careful
-keymap("n", "<leader>us", "<cmd>lua require('luasnip.loaders').edit_snippet_files() <CR>")
+keymap(
+	"n",
+	"<leader>us",
+	"<cmd>lua require('luasnip.loaders').edit_snippet_files() <CR>",
+	{ noremap = true, silent = true }
+)
 
 -- notify
 keymap("n", "<leader>un", function()
@@ -180,3 +198,41 @@ keymap("n", "<leader>un", function()
 end, {
 	desc = "Delete all notifications",
 })
+
+-- debuggin
+keymap("n", "<leader>dL", function()
+	require("dap").set_breakpoint(nil, nil, fn.input("Log point message: "))
+end, { desc = "Dap: Log breakpoint" })
+
+keymap("n", "<leader>db", function()
+	require("dap").toggle_breakpoint()
+end, { desc = "Dap: toggle breakpoint" })
+
+keymap("n", "<leader>dB", function()
+	require("dap").set_breakpoint(fn.input("Breakpoint condition: "))
+end, { desc = "Dap: set conditional breakpoint" })
+
+keymap("n", "<leader>dc", function()
+	require("dap").set_breakpoint(fn.input("Breakpoint condition: "))
+end, { desc = "Dap: continue or start debuggin " })
+
+keymap("n", "<leader>duc", function()
+	require("dapui").close(as.debug.layout.ft[vim.bo.ft])
+end, { desc = "Dap ui: close " })
+
+keymap("n", "<leader>dut", function()
+	require("dapui").toggle(as.debug.layout.ft[vim.bo.ft])
+end, { desc = "Dap ui: toggle " })
+
+keymap("n", "<localleader>de", function()
+	require("dap").step_out()
+end, { desc = "dap: step out" })
+keymap("n", "<localleader>di", function()
+	require("dap").step_into()
+end, { desc = "dap: step into" })
+keymap("n", "<localleader>do", function()
+	require("dap").step_over()
+end, { desc = "dap: step over" })
+keymap("n", "<localleader>dl", function()
+	require("dap").run_last()
+end, { desc = "dap REPL: run last" })

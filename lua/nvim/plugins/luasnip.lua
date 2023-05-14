@@ -13,8 +13,9 @@ end
 -- ls.filetype_extend()
 -- require("luasnip").filetype_extend("typescript", { "javascript" })
 
-ls.config.set_config({
-	history = false,
+ls.config.setup({
+	history = true,
+	update_events = "TextChanged,TextChangedI",
 	region_check_events = "CursorMoved,CursorHold,InsertEnter",
 	delete_check_events = "InsertLeave",
 	ext_opts = {
@@ -71,12 +72,15 @@ map({ "s", "i" }, "<c-b>", function()
 	ls.jump(-1)
 end, { expr = true })
 
-require("luasnip.loaders.from_lua").lazy_load()
--- NOTE: the loader is called twice so it picks up the defaults first then my custom textmate snippets.
--- see: https://github.com/L3MON4D3/LuaSnip/issues/364
--- require("luasnip.loaders.from_vscode").lazy_load()
+ls.filetype_extend("all", { "_" })
+-- -- NOTE: the loader is called twice so it picks up the defaults first then my custom textmate snippets.
+-- -- see: https://github.com/L3MON4D3/LuaSnip/issues/364
+require("luasnip.loaders.from_vscode").lazy_load()
 require("luasnip.loaders.from_vscode").lazy_load({ paths = "~/.config/nvim/snippets/textmate" })
+require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/snippets/textmate" })
 require("luasnip.loaders.from_vscode").load({ paths = "./snippets/textmate" })
+
+require("luasnip.loaders.from_lua").lazy_load()
 
 ls.filetype_extend("typescriptreact", { "javascript", "typescript" })
 ls.filetype_extend("dart", { "flutter" })
